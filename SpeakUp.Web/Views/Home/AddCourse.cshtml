@@ -1,0 +1,39 @@
+﻿@using SpeakUp.ViewModels;
+@model SpeakUp.ViewModels.DeckViewModel
+
+@{
+	DeckViewModel course = ViewBag.Course;
+}
+
+
+<body>
+	<div class="form-wrapper">
+		<p class="form-text">Start learning @course.DeckName ?</p>
+		<form asp-action="AddCourse" method="post" enctype="multipart/form-data">
+			<div asp-validation-summary="ModelOnly" class="text-danger" enc></div>
+			<input type="hidden" asp-for="Id" value="0" />
+			<span asp-validation-for="Id"></span>
+			<input type="hidden" asp-for="DeckName" value="@Model.DeckName" />
+			<span asp-validation-for="DeckName"></span>
+			<input type="hidden" asp-for="DeckImage" value="@Model.DeckImage" />
+			<span asp-validation-for="DeckImage"></span>
+			<input type="hidden" asp-for="DeckDescription" value="@Model.DeckDescription" />
+			<span asp-validation-for="DeckDescription"></span>
+			<input type="hidden" asp-for="Level" value="0" />
+			<span asp-validation-for="Level"></span>
+			<input type="hidden" asp-for="IsCourse" value="@Model.IsCourse" />
+			<span asp-validation-for="IsCourse"></span>
+			<input type="hidden" asp-for="UserId" value="@Model.UserId" />
+			<span asp-validation-for="UserId"></span>
+			<input type="hidden" asp-for="User" value="@Model.User" />
+			<span asp-validation-for="User"></span>
+
+			<!-- Hidden field for the original deck ID -->
+			<input type="hidden" name="originalDeckId" value="@ViewBag.OriginalDeck.Id" />
+
+			<input type="submit" value="Save" class="save-button" />
+		</form>
+	</div>
+	<a asp-action="ChangeCourse" class="link-button" style="cursor:pointer; position:absolute; top:17.5%;">Choose a different deck</a>
+</body>
+

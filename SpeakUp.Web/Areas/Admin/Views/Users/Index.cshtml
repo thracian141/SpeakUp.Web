@@ -1,0 +1,156 @@
+﻿@using SpeakUp.Utilities;
+@model PagedResult<SpeakUp.ViewModels.ApplicationUserViewModel>
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<style>
+	.table-container {
+		border: solid;
+		border-color: #1e1f21;
+		border-width: 5px;
+		background-color: #191919;
+		color: #babecc;
+		border-radius: 15px;
+	}
+
+	table {
+		border-collapse: separate;
+		border-spacing: 0 10px; /* Adjust the vertical spacing (10px in this case) */
+		width: 100%;
+		margin-top: -10px !important;
+	}
+
+	tr {
+		color: #babecc;
+		border: none;
+		text-align: center;
+	}
+
+	thead {
+		font-size: 18px;
+	}
+
+	tbody {
+		border: none;
+	}
+
+		tbody td {
+			background-color: #242629;
+			border: none;
+		}
+
+	tr:nth-child(even) td, tr:nth-child(odd) td {
+		background-color: #242629;
+		vertical-align: middle;
+		height: 50px;
+	}
+
+		tr:nth-child(even) td:first-child, tr:nth-child(odd) td:first-child {
+			border-top-left-radius: 10px;
+			border-bottom-left-radius: 10px;
+		}
+
+		tr:nth-child(even) td:last-child, tr:nth-child(odd) td:last-child {
+			border-top-right-radius: 10px;
+			border-bottom-right-radius: 10px;
+		}
+
+	.table-link {
+		color: #9f6dbc;
+		text-decoration: none;
+	}
+
+		.table-link:hover {
+			color: #babecc;
+		}
+</style>
+
+
+<h1>Index</h1>
+<div class="table-container">
+	<p>
+		<a class="table-link" asp-action="Create">Create New</a>
+	</p>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					Id
+				</th>
+				<th>
+					Username
+				</th>
+				<th>
+					Password
+				</th>
+				<th>
+					Email
+				</th>
+				<th>
+					Display Name
+				</th>
+				<th>
+					Profile Picture
+				</th>
+				<th>
+					Created Date
+				</th>
+				<th>
+					Last Course
+				</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.Data)
+			{
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => item.Id)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.UserName)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Password)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Email)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.DisplayName)
+					</td>
+					<td style="max-width:50px; max-height:20px; overflow:clip;">
+						@Html.DisplayFor(modelItem => item.ProfilePictureUrl)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.AccountCreatedDate)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.LastDeck)
+					</td>
+					<td>
+						@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+						@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+						@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+<cs-pager cs-paging-pagesize=(int)Model.PageSize
+		  cs-paging-pagenumber=(int)Model.PageNumber
+		  cs-paging-totalitems=(int)Model.TotalItems
+		  cs-pagenumber-param="pageNumber"
+		  asp-controller="Users"
+		  asp-action="Index"
+		  cs-pager-li-current-class="page-item active"
+		  cs-pager-li-other-class="page-item"
+		  cs-pager-li-non-active-class="page-item disabled"
+		  cs-pager-link-current-class="page-link"
+		  cs-pager-link-other-class="page-link">
+</cs-pager>

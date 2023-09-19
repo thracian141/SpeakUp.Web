@@ -1,0 +1,27 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using SpeakUp.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+	<div class="nav-item">
+		<form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+			<img class="nav-button-image" src="~/images/logouticon.svg" />
+			<button id="logout" type="submit" class="nav-link btn btn-link border-0" style="color:#9f6dbc; font-weight:bold; font-size:10px;">Logout</button>
+		</form>
+	</div>
+}
+else
+{
+	<a class="nav-item" asp-area="Identity" asp-page="/Account/Register" id="register" style="text-decoration:none">
+		<img class="nav-button-image" src="~/images/registericon.svg" />
+		<p class="nav-button-text">Register</p>
+	</a>
+	<a class="nav-item" asp-area="Identity" asp-page="/Account/Login" id="login" style="text-decoration:none">
+		<img class="nav-button-image" src="~/images/loginicon.svg" />
+		<p class="nav-button-text">Login</p>
+	</a>
+}

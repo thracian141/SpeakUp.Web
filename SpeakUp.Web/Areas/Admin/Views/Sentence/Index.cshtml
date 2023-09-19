@@ -1,0 +1,199 @@
+﻿@model IEnumerable<SpeakUp.ViewModels.SentenceViewModel>
+@{
+	var currentGrammar = ViewData["CurrentGrammar"] as SpeakUp.ViewModels.GrammarViewModel;
+}
+
+<style>
+	.table-container {
+		border: solid;
+		border-color: #191919;
+		border-width: 5px;
+		background-color: #191919;
+		color: #babecc;
+		border-radius: 15px;
+		height: 94vh;
+		overflow: auto;
+	}
+
+	table {
+		border-collapse: separate;
+		border-spacing: 0 10px; /* Adjust the vertical spacing (10px in this case) */
+		width: 100%;
+		margin-top: -10px !important;
+		padding-right: 0.3rem;
+	}
+
+	tr {
+		color: #babecc;
+		border: none;
+		text-align: center;
+	}
+
+	thead {
+		font-size: 18px;
+	}
+
+	tbody {
+		border: none;
+	}
+
+		tbody td {
+			background-color: #242629;
+			border: none;
+		}
+
+	tr:nth-child(even) td, tr:nth-child(odd) td {
+		background-color: #242629;
+		vertical-align: middle;
+		height: 50px;
+	}
+
+		tr:nth-child(even) td:first-child, tr:nth-child(odd) td:first-child {
+			border-top-left-radius: 10px;
+			border-bottom-left-radius: 10px;
+		}
+
+		tr:nth-child(even) td:last-child, tr:nth-child(odd) td:last-child {
+			border-top-right-radius: 10px;
+			border-bottom-right-radius: 10px;
+		}
+
+	.table-link {
+		color: #9f6dbc;
+		text-decoration: none;
+	}
+
+		.table-link:hover {
+			color: #babecc;
+		}
+
+	.table-container::-webkit-scrollbar {
+		width: 0.7rem; /* Width of the scrollbar */
+	}
+
+	.table-container::-webkit-scrollbar-thumb {
+		background-color: #1e1f21; /* Color of the scrollbar thumb */
+		border-radius: 6px; /* Border radius of the thumb */
+	}
+
+	.table-container::-webkit-scrollbar-track {
+		background-color: #191919; /* Color of the scrollbar track */
+		margin-left: 10px;
+	}
+</style>
+
+
+<div class="table-container" style="margin-top: 32px; height:22vh; border-bottom-left-radius:0; border-bottom-right-radius:0;">
+	<div class="top-row">
+		<p style="font-size:30px; margin-bottom:0">@currentGrammar.Name</p>
+		<a class="table-link" style="font-size:20px; margin-right:1rem;" asp-action="MassCreate" asp-route-deckId="@currentGrammar.Id">Mass Create</a>
+		<a class="table-link" style="font-size:20px; margin-right:1rem;" asp-action="Create" asp-route-deckId="@currentGrammar.Id">Create new</a>
+	</div>
+	<div style="display: flex; align-items: center; margin-left:0">
+		<input style="flex:1; margin-bottom:2rem; margin-right: 1rem; margin-left:1rem" type="text" class="search-bar" placeholder="Search sentences..." />
+	</div>
+	<table class="table table-head" style="margin-bottom:0; padding:0; border-collapse:collapse; text-align: center;">
+		<thead>
+			<tr>
+				<th>Front</th>
+				<th>Back</th>
+				<th class="hidden-header"></th>
+			</tr>
+		</thead>
+	</table>
+</div>
+<div class="table-container" style="border-top-left-radius:0; border-top-right-radius:0; height:72vh;">
+	<table class="table" id="table">
+		<thead>
+			<tr class="hidden-headers">
+				<th>Front</th>
+				<th>Back</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody class="table-body">
+			@foreach (var item in Model)
+			{
+				<tr class="data-row">
+					<td>
+						@Html.DisplayFor(modelItem => item.Front)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Back)
+					</td>
+					<td>
+						@Html.ActionLink("Edit", "Edit", new { id=item.Id }, new { @class = "table-link" }) |
+						<a asp-action="Delete" method="post" asp-route-id="@item.Id" class="table-link">Delete</a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+			$(".search-bar").on("input", function () {
+				const searchTerm = $(this).val().toLowerCase(); // Get the search term
+
+				$(".data-row").each(function () {
+					const rowData = $(this).text().toLowerCase(); // Get the text content of the row
+					const firstColumnData = $(this).find("td:nth-child(1)").text().toLowerCase(); // Get text from first column
+					const secondColumnData = $(this).find("td:nth-child(2)").text().toLowerCase(); // Get text from second column
+
+					if (firstColumnData.includes(searchTerm) || secondColumnData.includes(searchTerm)) {
+						$(this).show();
+					} else {
+						$(this).hide();
+					}
+				});
+			});
+		});
+	</script>
+	<script>
+		$(document).ready(function () {
+			const upperHeaderCells = $(".table-head th");
+			const lowerHeaderCells = $("#table .hidden-headers th");
+			const dataRows = $(".data-row");
+
+			upperHeaderCells.each(function (index) {
+				$(this).width($(lowerHeaderCells[index]).width());
+			});
+
+			dataRows.each(function () {
+				const dataCells = $(this).children("td");
+				upperHeaderCells.each(function (index) {
+					$(dataCells[index]).width($(this).width());
+				});
+			});
+
+			$("#table .hidden-headers").remove();
+		});
+	</script>
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const rows = document.querySelectorAll(".data-row");
+			const borderRadius = "10px"; // Adjust the border radius as needed
+
+			rows.forEach(row => {
+				row.style.borderRadius = borderRadius;
+			});
+
+			const lastReviewedSpans = document.querySelectorAll(".last-reviewed-time");
+
+			lastReviewedSpans.forEach(span => {
+				const lastReviewed = new Date(span.dataset.lastReviewed);
+				const addedDate = new Date(span.dataset.addedDate);
+
+				if (lastReviewed >= addedDate) {
+					const currentTime = new Date();
+					const timeDiff = currentTime - lastReviewed;
+					const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
+
+					span.textContent = `${hoursDiff} hours ago`;
+				}
+			});
+		});
+	</script>
+}

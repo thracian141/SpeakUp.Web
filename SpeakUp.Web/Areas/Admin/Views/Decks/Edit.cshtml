@@ -1,0 +1,73 @@
+﻿@model SpeakUp.ViewModels.DeckViewModel
+
+@{
+	ViewData["Title"] = "Edit";
+}
+
+
+<div class="form-wrapper">
+	<p style="font-size:24px;">Edit deck:</p>
+	<div class="separator"></div>
+	<form asp-action="Edit" method="post" enctype="multipart/form-data">
+		<div asp-validation-summary="ModelOnly" class="text-danger" enc></div>
+		<input type="hidden" asp-for="Id" />
+		<span asp-validation-for="Id"></span>
+		<input type="hidden" asp-for="UserId" />
+		<span asp-validation-for="UserId"></span>
+		<input type="hidden" asp-for="IsCourse" />
+		<span asp-validation-for="IsCourse"></span>
+		<input type="hidden" asp-for="DeckImage" />
+		<span asp-validation-for="DeckImage"></span>
+		@if (Model.DeckImage != null)
+		{
+			<img src="~/DeckImages/@Model.DeckImage" alt="Course Image" class="img-fluid mt-2" style="max-width: 300px; border:solid;border-color:#babecc; border-width:1px;" />
+			<div class="form-section">
+				<label asp-for="DeckImageFile" class="form-label" style="margin-top:5px">Course Image</label>
+				<input asp-for="DeckImageFile" class="form-control" />
+				<span asp-validation-for="DeckImageFile" class="text-danger"></span>
+			</div>
+		}
+		<div class="form-section">
+			<label asp-for="DeckName" class="form-label"></label>
+			<input asp-for="DeckName" class="form-control" />
+			<span asp-validation-for="DeckName" class="text-danger"></span>
+		</div>
+		<div class="form-section">
+			<label asp-for="DeckDescription" class="form-label"></label>
+			<input asp-for="DeckDescription" class="form-control" />
+			<span asp-validation-for="DeckDescription" class="text-danger"></span>
+		</div>
+		<input type="submit" value="Save" class="save-button" />
+	</form>
+</div>
+
+<a class="link-button" asp-action="Index">Back to List</a>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const inputFields = document.querySelectorAll('.form-control');
+
+			inputFields.forEach(function (inputField) {
+				const formSection = inputField.closest('.form-section');
+				const formLabel = formSection.querySelector('.form-label');
+
+				function updateLabelColor() {
+					if (inputField.value.trim() !== '') {
+						formLabel.style.color = '#868eac';
+					} else {
+						formLabel.style.color = '#4e5366'; // Reset to default color
+					}
+				}
+
+				updateLabelColor();
+
+				inputField.addEventListener('input', updateLabelColor);
+				inputField.addEventListener('change', updateLabelColor);
+			});
+		});
+	</script>
+}

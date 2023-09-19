@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="jQuery" Version="3.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SpeakUp.Utilities\SpeakUp.Utilities.csproj" />
+    <ProjectReference Include="..\SpeakUp.ViewModels\SpeakUp.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>

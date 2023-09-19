@@ -1,0 +1,431 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using SpeakUp.Models;
+@using SpeakUp.Utilities;
+@using SpeakUp.ViewModels;
+@model List<SpeakUp.ViewModels.DeckViewModel>
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+	var userId = ViewBag.CurrentUserId;
+	var currentCourse = ViewBag.CurrentCourse;
+	List<DeckViewModel> userDecks = ViewBag.UserDecks;
+	var dailyPerformanceCurrent = ViewBag.CurrentDailyPerformance as DailyPerformanceViewModel;
+	var dailyPerformanceAll = ViewBag.AllDailyPerformances as List<DailyPerformanceViewModel>;
+	int wordsLearned = 0; int cardsGuessed = 0;
+	if (dailyPerformanceCurrent != null) {
+		wordsLearned = dailyPerformanceCurrent.WordsLearnedCount;
+		cardsGuessed = dailyPerformanceCurrent.WordsGuessedCount;
+	}
+	int currentDeckWordCount = ViewBag.DeckWordCount;
+}
+
+@{
+	ApplicationUser user = await UserManager.GetUserAsync(User);
+}
+<style>
+	.index-section {
+		background-color: #191919;
+		padding: 10px;
+		border-radius: 15px;
+		margin-bottom: 10px;
+	}
+
+	.index-section-title {
+		font-family: Ebrima;
+		font-size: 24px;
+		color: #b9bdcc;
+	}
+
+	.index-inner-section {
+		background-color: #191919;
+		text-decoration: none;
+		display: flex;
+		flex-flow: row;
+		padding-bottom: 20px;
+	}
+
+		.index-inner-section::-webkit-scrollbar {
+			width: 0.7rem; /* Width of the scrollbar */
+		}
+
+		.index-inner-section::-webkit-scrollbar-thumb {
+			background-color: #1e1f21; /* Color of the scrollbar thumb */
+			border-radius: 6px; /* Border radius of the thumb */
+		}
+
+		.index-inner-section::-webkit-scrollbar-track {
+			background-color: #191919; /* Color of the scrollbar track */
+		}
+
+	.block-text {
+		color: #7b829d;
+	}
+
+	.course-block {
+		width: 200px;
+		height: 133px;
+		background-color: #242629;
+		background-repeat: no-repeat;
+		background-size: 200px 100px;
+		border-radius: 10px;
+		position: relative;
+		display: inline-block;
+		text-align: start;
+		margin-right: 20px;
+	}
+
+	.course-block-text {
+		color: #858caa;
+		font-family: Ebrima;
+		font-weight: normal;
+		font-size: 18px;
+		position: relative;
+		top: 78%;
+		margin-left: 0.5rem;
+	}
+
+	.welcome-sign {
+		color: #b8bcca;
+		font-size: 36px;
+	}
+
+	.learn-button {
+		height: 172.9px !important;
+		width: 50px;
+		background-color: #242629;
+		color: #191919;
+		border-radius: 5px;
+		text-decoration: none;
+		display: flex;
+		align-content: center;
+		justify-content: center;
+	}
+
+		.learn-button:hover img {
+			filter: drop-shadow(0 0 2px rgba(78, 171, 185, 0.3));
+			transition: all 0.1s;
+		}
+
+		.learn-button:hover {
+			box-shadow: inset 0 0 5px 0.01px #2e3034;
+			transition: all 0.1s;
+		}
+
+	.current-course-block {
+		height: 172.9px;
+		width: 260px;
+		background-size: 260px 130px;
+		margin-right: 0;
+		text-align: center;
+		fill: none;
+		text-decoration: none;
+	}
+
+	.overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(186, 190, 204, 0); /* Initial transparent overlay color */
+		transition: background-color 0.3s ease; /* Smooth transition */
+		transition: all 0.3s ease-in-out;
+		border-radius: 9px;
+		color: #babecc;
+		text-align: center;
+		line-height: 172.9px;
+	}
+
+	.overlay-text {
+		opacity: 0;
+		transition: all 0.3s ease-in-out;
+		font-size: 20px;
+	}
+
+	.current-course-block:hover .overlay {
+		background-color: #222326;
+	}
+
+	.current-course-block:hover .overlay-text {
+		opacity: 1;
+	}
+
+	.goicon {
+		width: 70%;
+		height: auto;
+		margin-bottom: 5px;
+	}
+
+	.course-link {
+		text-decoration: none;
+		background-color: #242629;
+		padding: 10px;
+		border-radius: 10px;
+		display: flex;
+		flex-flow: row;
+		width: 100%;
+		transition: background-color 0.2s;
+	}
+
+		.course-link:hover {
+			background-color: #222326;
+		}
+
+	.level-bar-container {
+		display: flex;
+		flex-flow: column;
+		justify-content: center;
+		width: 20rem;
+		text-align: center;
+		display: flex;
+		flex-flow: column;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	.level-bar {
+		width: 100%;
+		height: 10px;
+		background-color: #191919;
+		border-radius: 5px;
+		overflow: hidden;
+	}
+
+	.fill-level {
+		height: 100%;
+		background-color: #4eabb9; /* Fill color for the level bar */
+	}
+
+	.days-of-week {
+		display: flex;
+		gap: 1rem;
+		transition: border-color 0.2s ease-in-out;
+	}
+
+	.days-of-week-supplementary {
+		border-bottom: solid;
+		border-color: #1e1e20;
+		border-radius: 5px;
+		padding-bottom: 25px;
+	}
+
+		.days-of-week-supplementary:hover {
+			border-color: #242629;
+		}
+
+	.day-box {
+		display: flex;
+		width: 2.4rem;
+		height: 2.4rem;
+		justify-content: center;
+		padding: 10px;
+		border-radius: 5px;
+		border: solid;
+		background-color: #191919;
+		border-color: #242629;
+		border-width: 3px;
+		color: #babecc;
+		font-size: 14px;
+		position: relative;
+	}
+
+		.day-box span {
+			position: absolute;
+			top: 115%;
+		}
+
+		.day-box:hover {
+			border-color: #222326;
+			color: #9496a2;
+		}
+
+	.no-performance {
+		border-color: #1e1e20;
+		color: #57595e;
+	}
+
+		.no-performance:hover {
+			border-color: #1d1e1f !important;
+			color: #4d4e53 !important;
+		}
+
+	.goal-completed {
+		background-color: #19231d !important;
+		border-color: #19231d;
+		background-image: url("images/checkmark.svg");
+		background-size: 80%;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+
+		.goal-completed span {
+			background-color: #242629;
+			border-radius: 5px;
+			padding-left: 5px;
+			padding-right: 5px;
+		}
+
+		.goal-completed .current-day-circle {
+			top: 190% !important;
+			z-index: 1;
+		}
+
+		.goal-completed:hover {
+			background-color: #19211c;
+			border-color: #19211c;
+		}
+
+	.current-day-circle {
+		width: 4px;
+		height: 4px;
+		background-color: #babecc;
+		border-radius: 50%;
+		position: absolute;
+		top: 175%;
+	}
+
+	#new-words {
+		display: none;
+		margin-left: -10px;
+	}
+
+	#cards-today:hover + #new-words {
+		display: block; /* Show "new-words" when hovering over "cards-today" */
+		position: absolute;
+		background-color: #1e1e20; /* Background color for the drop-down */
+		border-radius: 5px;
+		padding: 10px;
+		z-index: 1; /* Ensure the drop-down is on top of other content */
+	}
+</style>
+
+@if (user?.DisplayName == null) {
+	<p class="welcome-sign">Welcome, @UserManager.GetUserName(User)</p>
+} else {
+	<p class="welcome-sign">Welcome, @user.DisplayName</p>
+}
+<body>
+	<div style="display:flex; flex-flow:row; justify-content:space-between;">
+		<div class="index-section" style="width:27.2%; text-align:center;">
+			<p class="index-section-title">Jump back in!</p>
+			@if (currentCourse != null) {
+				<div style="text-decoration:none; display:flex; flex-flow:row; gap:0.75rem; width:100%; justify-content:center;">
+					<a asp-action="ChangeCourse" class="course-block current-course-block" style="background-image:url('deckimages/@currentCourse.DeckImage');">
+						<p class="course-block-text">@currentCourse.DeckName</p>
+						<div class="overlay">
+							<p class="overlay-text">Change Active Course?</p>
+						</div>
+					</a>
+					<a class="learn-button" asp-area="Admin" asp-controller="Learn" asp-action="Learn" asp-route-currentDeckId="@currentCourse.Id">
+						<img src="~/images/goicon.svg" class="goicon" />
+					</a>
+				</div>
+			} else {
+				if (userDecks != null) {
+					<a class="link-button" asp-action="ChangeCourse">
+						Pick a course!
+					</a>
+				} else {
+					<a class="link-button" asp-action="OfficialCourses">
+						Get learning!
+					</a>
+				}
+			}
+		</div>
+		<div class="index-section" style="width:72%; position:relative;">
+			<p class="index-section-title" style="margin-bottom:4px;">Your performance</p>
+			@if (dailyPerformanceCurrent != null) {
+				<p id="cards-today" class="index-section-title" style="color:#878eac; font-size:18px; margin-bottom:2px; width:fit-content">
+					@cardsGuessed / 50 cards
+				</p>
+				<p id="new-words" class="index-section-title" style="color:#878eac; font-size:16px;">
+					@wordsLearned new words
+				</p>
+				<p style="color:#9f6dbc; font-size:20px; position:absolute; left:50%; top:36%;
+					transform:translate(-50%, -50%); margin-bottom:0px;">Daily goals</p>
+				<div style="position:absolute; left:50%; top:48%; transform:translateX(-50%); display:flex; flex-direction:row; gap:3rem;">
+					<div style="display:flex; flex-direction:column; text-align:center;">
+						<p style="color:#9f6dbc; font-size:14px; margin-bottom:6px; text-decoration:none;">Previous</p>
+						<a asp-controller="DailyPerformance" asp-action="History" asp-route-id="@user.Id" class="days-of-week days-of-week-supplementary">
+							<div style="width:25px; height:25px;">
+								<img src="~/images/threedotshorizontal.svg" style="width:100%; height:auto; padding-top:1rem;"/>
+							</div>
+							<div class="day-box no-performance"> <span>Fri</span></div>
+							<div class="day-box no-performance"> <span>Sat</span></div>
+							<div class="day-box no-performance"> <span>Sun</span></div>
+						</a>
+					</div>
+					<div style="display:flex; flex-direction:column; text-align:center;">
+						<p style="color:#9f6dbc; font-size:14px; margin-bottom:6px;">This week</p>
+						<div class="days-of-week">
+							@for (int i = 0; i < 7; i++) {
+								int offset = (int)DateTime.Now.DayOfWeek - 1;
+								if (offset < 0) {
+									offset += 7; // Handle Sunday as the first day of the week
+								}
+
+								DateTime currentDate = DateTime.Now.AddDays(i - offset);
+								string dayName = currentDate.ToString("ddd"); // Get the abbreviated day name (e.g., "Mon")
+								var matchingPerformance = dailyPerformanceAll.FirstOrDefault(performance => performance.Date.Date == currentDate.Date);
+
+								<div class="day-box @(matchingPerformance == null ? "no-performance" : "") @(matchingPerformance?.WordsGuessedCount >= 50 ? "goal-completed" : "")">
+									@if (currentDate.Date == DateTime.Now.Date) {
+										<div class="current-day-circle"></div>
+									}
+									<span>@dayName</span>
+								</div>
+							}
+						</div>
+					</div>
+					<div style="display:flex; flex-direction:column; text-align:center;">
+						<p style="color:#9f6dbc; font-size:14px; margin-bottom:6px; text-decoration:none;">Future goals</p>
+						<a asp-controller="DailyPerformance" asp-action="Goals" asp-route-id="@user.Id" class="days-of-week days-of-week-supplementary">
+							<div class="day-box no-performance"><span>Mon</span></div>
+							<div class="day-box no-performance"> <span>Tue</span></div>
+							<div class="day-box no-performance"> <span>Wed</span></div>
+							<div style="width:25px; height:25px;">
+								<img src="~/images/threedotshorizontal.svg" style="width:100%; height:auto; padding-top:1rem;" />
+							</div>
+						</a>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+	<div class="index-section">
+		<p class="index-section-title">Your progress</p>
+		<div class="index-inner-section" style="padding-bottom:0;">
+			@if (currentCourse != null) {
+				<div class="course-link" asp-area="Admin" asp-controller="Grammar" asp-action="GrammarsForDeck" asp-route-deckId="@currentCourse.Id" style="display:flex; position:relative;">
+					<img src="~/deckimages/@currentCourse.DeckImage" style="border-radius:10px; object-fit:cover; width:150px; height:100px;" />
+					<p style="font-size:24px; color:#babecc; padding-left:10px; margin-bottom:6px; line-height:95px; margin-left:4rem;">@currentCourse.DeckName</p>
+					<div class="level-bar-container" style="">
+						<p style="color:#868eac; font-size:18px; margin-bottom:8px;">@currentCourse.Level out of @currentDeckWordCount words</p>
+						<div class="level-bar">
+							<div class="fill-level"></div>
+						</div>
+					</div>
+					<a asp-area="Admin" asp-controller="Grammar" asp-action="GrammarsForDeck" asp-route-deckId="@currentCourse.Id" style="height:100%; display:flex; position:absolute; right:0%; top:50%; transform:translateY(-50%)">
+						<img src="~/images/downarrow.svg" style="display:inline-block ;width:40px; margin-right:40px;" />
+					</a>
+				</div>
+			}
+		</div>
+	</div>
+	<div class="index-section">
+		<p class="index-section-title">Decks</p>
+		<div class="index-inner-section" style="height:10vh; overflow-x:scroll; overflow-y:hidden; padding-bottom:10px;">
+			@foreach (var item in Model) {
+				if (!item.IsCourse && item.UserId == userId) {
+					<a href="@Url.Page("/Index")" style="text-decoration:none;">
+						<div class="course-block" style="width:175px; height:70px;">
+							<p style="color:#858caa; font-size:22px; text-align:center; line-height:70px;">@item.DeckName</p>
+						</div>
+					</a>
+				}
+			}
+		</div>
+	</div>
+</body>

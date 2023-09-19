@@ -1,0 +1,160 @@
+﻿@using SpeakUp.Utilities;
+@model IEnumerable<SpeakUp.ViewModels.GrammarViewModel>
+
+@{
+	ViewData["Title"] = "GrammarViewModel";
+	var currentDeck = ViewData["CurrentDeck"] as SpeakUp.ViewModels.DeckViewModel;
+}
+
+<style>
+	.table-container {
+		border: solid;
+		border-color: #1e1f21;
+		border-width: 5px;
+		background-color: #191919;
+		color: #babecc;
+		border-radius: 15px;
+	}
+
+	table {
+		border-collapse: separate;
+		border-spacing: 0 10px; /* Adjust the vertical spacing (10px in this case) */
+		width: 100%;
+		margin-top: -10px !important;
+	}
+
+	tr {
+		color: #babecc;
+		border: none;
+		text-align: center;
+	}
+
+	thead {
+		font-size: 18px;
+	}
+
+	tbody {
+		border: none;
+	}
+
+		tbody td {
+			background-color: #242629;
+			border: none;
+		}
+
+	tr:nth-child(even) td, tr:nth-child(odd) td {
+		background-color: #242629;
+		vertical-align: middle;
+		height: 50px;
+		transition: all 0.2s ease-in-out;
+	}
+
+	tr:nth-child(even):hover td, tr:nth-child(odd):hover td {
+		background-color: #222326 !important;
+	}
+
+	tr:nth-child(even) td:first-child, tr:nth-child(odd) td:first-child {
+		border-top-left-radius: 10px;
+		border-bottom-left-radius: 10px;
+	}
+
+	tr:nth-child(even) td:last-child, tr:nth-child(odd) td:last-child {
+		border-top-right-radius: 10px;
+		border-bottom-right-radius: 10px;
+	}
+
+	.table-link {
+		color: #9f6dbc;
+		text-decoration: none;
+	}
+
+		.table-link:hover {
+			color: #babecc;
+		}
+	}
+</style>
+
+<div class="table-container" style="margin-top: 32px;">
+	<div style="display: flex; justify-content: space-between; align-items: center; margin-left:1rem; margin-bottom:0">
+		<p style="font-size:30px; margin-bottom:0">@currentDeck.DeckName</p>
+		<a class="table-link" style="font-size:20px; margin-right:1rem;" asp-action="Create" asp-route-deckId="@currentDeck.Id">Add Grammar as admin</a>
+	</div>
+	<div style="display: flex; align-items: center; margin-left:0">
+		<input style="flex:1; margin-bottom:2rem; margin-right: 1rem; margin-left:1rem" type="text" class="search-bar" placeholder="Search..." />
+	</div>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Last Reviewed</th>
+				<th>Level</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr class="data-row" style="cursor:pointer;" onclick="navigateToWordsForGrammar('@item.Id')">
+					<td style="font-size:20px">@Html.DisplayFor(modelItem => item.Name)</td>
+					<td>@Html.DisplayFor(modelItem => item.LastReviewDate)</td>
+					<td>
+						<div class="progress-bar">
+							<div class="progress-level" style="width: @item.Level%"></div>
+						</div>
+					</td>
+					<td>
+						@Html.ActionLink("Edit", "Edit", new { id=item.Id }, new { @class = "table-link" }) |
+						@Html.ActionLink("Delete", "Delete", new { id=item.Id }, new { @class = "table-link" }) |
+						@if (User.IsInRole(WebSiteRole.WebSite_Admin) || User.IsInRole(WebSiteRole.WebSite_Dev)) {
+							@Html.ActionLink("Sentences", "Index", "Sentence", new { id=item.Id }, new { @class = "table-link" })
+						}
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+@section Scripts {
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const rows = document.querySelectorAll(".data-row");
+			const borderRadius = "10px"; // Adjust the border radius as needed
+
+			rows.forEach(row => {
+				row.style.borderRadius = borderRadius;
+			});
+		});
+	</script>
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const rows = document.querySelectorAll(".data-row");
+			const borderRadius = "10px"; // Adjust the border radius as needed
+
+			rows.forEach(row => {
+				row.style.borderRadius = borderRadius;
+			});
+
+			const lastReviewedSpans = document.querySelectorAll(".last-reviewed-time");
+
+			lastReviewedSpans.forEach(span => {
+				const lastReviewed = new Date(span.dataset.lastReviewed);
+				const addedDate = new Date(span.dataset.addedDate);
+
+				if (lastReviewed >= addedDate) {
+					const currentTime = new Date();
+					const timeDiff = currentTime - lastReviewed;
+					const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
+
+					span.textContent = `${hoursDiff} hours ago`;
+				}
+			});
+		});
+	</script>
+	<script>
+		function navigateToWordsForGrammar(grammarId) {
+			window.location.href = '@Url.Action("WordsForGrammar", "Words")' + '?grammarId=' + grammarId
+		}
+	</script>
+}
+

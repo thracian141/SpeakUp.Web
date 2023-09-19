@@ -1,0 +1,153 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using SpeakUp.Models;
+@using SpeakUp.Utilities;
+@inject SignInManager<ApplicationUser> SignInManager
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+<style>
+	html, body {
+		height: 100%;
+	}
+
+	.navbar-brand {
+		font-weight: bold;
+		margin-bottom: 20px;
+		color: #babecc;
+	}
+
+	.text-center {
+		margin-bottom: 20px;
+	}
+
+	.title-element {
+		margin-bottom: 1rem;
+	}
+
+		.title-element:hover {
+			background-color: #191919 !important;
+			cursor: default !important;
+		}
+
+		.title-element img {
+			margin-left: 0.8rem;
+			width: 2.4rem;
+			margin-right: 1.8rem;
+		}
+
+		.title-element p {
+			font-size: 20px;
+		}
+
+	/*Hidden state*/
+	.navbar-vertical {
+		width: 6rem;
+		transition: width 0.2s ease-in-out;
+		overflow: hidden;
+	}
+
+		.navbar-vertical > ul > li > a {
+			width: inherit;
+		}
+
+			.navbar-vertical > ul > li > a > p {
+				display: none;
+			}
+
+			.navbar-vertical > ul > li > a > img {
+				margin-right: 1rem;
+			}
+
+	/*
+			.navbar-vertical:hover {
+				width: 14rem;
+			}
+
+				.navbar-vertical:hover > ul > li > a {
+					width: inherit;
+				}
+
+					.navbar-vertical:hover > ul > li > a > p {
+						display: block;
+					}
+
+					.navbar-vertical:hover > ul > li > a > img {
+						margin-right: 2rem;
+					}*/
+
+	.hovered {
+		width: 14rem;
+	}
+
+		.hovered > ul > li > a {
+			width: inherit;
+		}
+
+			.hovered > ul > li > a > p {
+				display: block;
+			}
+
+			.hovered > ul > li > a > img {
+				margin-right: 2rem;
+			}
+</style>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title> SpeakUp.Web</title>
+	<link rel="icon" type="image/x-icon" href="~/images/speakuplogo.ico" />
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/SpeakUp.Web.styles.css" asp-append-version="true" />
+</head>
+<body>
+	@await Html.PartialAsync("_NavigationBar")
+	<script>
+		const isNavbarHovered = localStorage.getItem("navbarHovered");
+		const navbar = document.querySelector(".navbar-vertical");
+
+		navbar.addEventListener("mouseenter", () => {
+			localStorage.setItem("navbarHovered", "true");
+			navbar.classList.add("hovered");
+		});
+
+		navbar.addEventListener("mouseleave", () => {
+			localStorage.removeItem("navbarHovered");
+			navbar.classList.remove("hovered");
+		});
+
+		if (isNavbarHovered === "true") {
+			navbar.classList.add("hovered");
+		}
+	</script> 
+	<div class="container" id="content-placeholder">
+		<main role="main" class="pb-3">
+			@RenderBody()
+		</main>
+	</div>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	@await RenderSectionAsync("Scripts", required: false)
+	<script>
+		$(document).ready(function () {
+			const navigationLinks = $(".nav-item");
+
+			navigationLinks.each(function () {
+				const linkUrl = $(this).attr("href");
+				const currentPageUrl = window.location.pathname;
+
+				if (linkUrl === currentPageUrl) {
+					$(this).addClass("selected-nav-item");
+				}
+			});
+		});
+	</script>
+</body>
+
+</html>
+
+

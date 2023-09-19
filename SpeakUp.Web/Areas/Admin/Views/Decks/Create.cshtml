@@ -1,0 +1,80 @@
+﻿@using SpeakUp.Utilities;
+@model SpeakUp.ViewModels.DeckViewModel
+
+@{
+	ViewData["Title"] = "Create";
+}
+
+<style>
+	.form-check {
+		margin-top: 0.5rem;
+		height: 2rem;
+		width: 2rem;
+		background: #242629;
+		color: #babecc;
+		border-radius: 10px !important;
+	}
+	.wrap-wrapper {
+		display:flex;
+		flex-flow:column;
+	}
+</style>
+
+<div class="wrap-wrapper">
+	<div class="form-wrapper">
+		<p style="font-size:24px;">Create deck:</p>
+		<div class="separator"></div>
+		<form asp-action="Create" method="post" enctype="multipart/form-data">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-section">
+				<label asp-for="DeckName" class="form-label">Name</label>
+				<input asp-for="DeckName" class="form-control" />
+				<span asp-validation-for="DeckName" class="text-danger"></span>
+			</div>
+			<div class="form-section">
+				<label asp-for="DeckDescription" class="form-label">Description</label>
+				<input asp-for="DeckDescription" class="form-control" />
+				<span asp-validation-for="DeckDescription" class="text-danger"></span>
+			</div>
+			@if (User.IsInRole(WebSiteRole.WebSite_Admin) || User.IsInRole(WebSiteRole.WebSite_Dev))
+			{
+				<div class="form-section">
+					<label asp-for="DeckImageFile" class="form-label">Image</label>
+					<input asp-for="DeckImageFile" class="form-control" />
+					<span asp-validation-for="DeckImageFile" class="text-danger"></span>
+				</div>
+				<div class="form-section" style="height:2.8rem;">
+					<label asp-for="IsCourse" class="form-label">Course</label>
+					<input type="checkbox" asp-for="IsCourse" class="form-check" />
+					<span asp-validation-for="IsCourse" class="text-danger"></span>
+				</div>
+			}
+			<input type="submit" value="Create" class="save-button" />
+		</form>
+	</div>
+	<a class="link-button" style="border-top-left-radius:0px;border-top-right-radius:0px;" asp-action="Index">Back to List</a>
+</div>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const inputFields = document.querySelectorAll('.form-control');
+
+		inputFields.forEach(function (inputField) {
+			const formSection = inputField.closest('.form-section');
+			const formLabel = formSection.querySelector('.form-label');
+
+			function updateLabelColor() {
+				if (inputField.value.trim() !== '') {
+					formLabel.style.color = '#868eac';
+				} else {
+					formLabel.style.color = '#4e5366'; // Reset to default color
+				}
+			}
+
+			updateLabelColor();
+
+			inputField.addEventListener('input', updateLabelColor);
+			inputField.addEventListener('change', updateLabelColor);
+		});
+	});
+</script>

@@ -1,0 +1,30 @@
+﻿@model SpeakUp.ViewModels.GrammarViewModel
+
+@{
+	ViewData["Title"] = "MassCreate";
+}
+
+<h1 style="color:#babecc;">Mass Create Words for Grammar</h1>
+
+<h4 style="color:#babecc;">as Admin</h4>
+<hr style="color:#babecc;" />
+<div class="row">
+	<div class="col-md-4">
+		<form method="post" enctype="multipart/form-data" asp-action="MassCreate" class="mt-4" style="color:#babecc;">
+			<div class="form-group">
+				<input type="hidden" name="deckId" value="@Model.DeckId" />
+				<input type="hidden" name="grammarId" value="@Model.Id" />
+			</div>
+			<div class="form-group">
+				<label for="file">Select File:</label>
+				<input type="file" name="file" class="form-control-file" id="file">
+			</div>
+			<button type="submit" class="btn btn-primary">Upload and Insert</button>
+		</form>
+	</div>
+</div>
+
+<div style="color:#babecc;">
+	<a asp-action="Index">Back to List</a>
+</div>
+

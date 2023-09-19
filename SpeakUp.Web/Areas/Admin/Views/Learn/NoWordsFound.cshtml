@@ -1,0 +1,72 @@
+﻿@{
+	bool? isCourse = ViewBag.IsCourse;
+}
+
+
+<style>
+	body {
+		text-align: center;
+	}
+
+	.par {
+		color: #babecc;
+		font-size: 40px;
+	}
+
+	.par-wrap {
+		margin-top: 40vh;
+		transform: translateY(-50%);
+		display: flex;
+		flex-flow: column;
+	}
+
+	.emoji-thing {
+		font-size: 200px;
+		color: #babecc;
+		margin-right: 5rem;
+	}
+
+	.par-wrap p {
+		text-shadow: 0px 4px 8px rgba(0,0,0,0.5);
+	}
+	.button-1 {
+		width: auto;
+		padding-left: 4px;
+		padding-right: 4px;
+		text-decoration: none;
+		cursor:pointer;
+		line-height:48px;
+	}
+	.button-1:hover {
+		color:#191919;
+	}
+</style>
+
+<body>
+	@if (isCourse == null)
+	{
+		<div class="par-wrap">
+			<p class="emoji-thing">:(</p>
+			<p class="par">Whoops! None of your Courses and Decks have content...</p>
+			<p class="par">Stay tuned for more, or customize your own Decks!</p>
+			<a asp-area="" asp-controller="Home" asp-action="Index" class="save-button button-1" style="">Home</a>
+		</div>
+	}
+	else if ((bool)isCourse)
+	{
+		<div class="par-wrap">
+			<p class="emoji-thing">:(</p>
+			<p class="par">Whoops! Course is being developped.</p>
+			<p class="par"> Stay tuned...</p>
+			<a asp-area="" asp-controller="Home" asp-action="ChangeCourse" class="save-button button-1" style="">Learn something else...</a>
+		</div>
+	} else
+	{
+		<div class="par-wrap">
+			<p class="emoji-thing">:(</p>
+			<p class="par">Whoops! Deck is empty</p>
+			<p class="par">Consider adding words, or switching to a different deck.</p>
+			<a asp-area="" asp-controller="Home" asp-action="Index" class="save-button button-1" style="">Home</a>
+		</div>
+	}
+</body>

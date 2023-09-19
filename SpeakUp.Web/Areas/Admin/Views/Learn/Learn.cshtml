@@ -1,0 +1,367 @@
+﻿@using SpeakUp.ViewModels;
+@model SpeakUp.ViewModels.WordViewModel
+
+@{
+	ViewData["Title"] = "Learn";
+	DeckViewModel currentDeck = ViewBag.CurrentDeck;
+	List<DeckViewModel> decksForDropDown = ViewBag.Decks;
+
+	string[]? sentenceback = new string[2];
+	string? sentencefront = null;
+	if (ViewBag.BackSentence != null) {
+		sentenceback = ViewBag.BackSentence as string[];
+		sentencefront = ViewBag.FrontSentence as string;
+	}
+	string[]? backSentenceParts = sentenceback;
+	string? sentenceBackLeft = backSentenceParts[0];
+	string? sentenceBackRight = backSentenceParts[1];
+	string? frontSentence = sentencefront;
+}
+
+<head>
+	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+</head>
+
+<style>
+	.base-container {
+		display: block;
+		position: relative;
+		background-color: #191919;
+		border-top-left-radius: 15px;
+		border-top-right-radius: 15px;
+		height: 35rem;
+		margin-top: 3rem;
+		color: #babecc;
+	}
+
+	.front-wrapper {
+		position: relative;
+		height: 15rem;
+		background-color: #1e1f21;
+		border-bottom-left-radius: 15px;
+		border-bottom-right-radius: 15px;
+		color: #babecc;
+	}
+
+	.deck-info-container {
+		display: flex;
+		flex-flow: row;
+		position: absolute;
+		border-radius: 10px;
+		width: 12rem;
+		height: 2.5rem;
+		top: 5%;
+		left: 4%;
+		background-color: #1e1f21;
+		text-align: center;
+		line-height: 2.4rem;
+		justify-content: center;
+		cursor: pointer;
+	}
+
+		.deck-info-container:hover {
+			background-color: #1c1d1f;
+		}
+
+	.info-title {
+		color: #858dab;
+		margin-right: 0.5rem;
+	}
+
+	.info-body {
+		color: #868eac;
+		font-weight: bold;
+	}
+
+	.sentence-input-wrapper {
+		width: 90%;
+		height: 17.5rem;
+		position: absolute;
+		top: 25%;
+		left: 4%;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-start;
+		align-items: center;
+	}
+
+	.word-input {
+		background-color: #212121;
+		font-size: 56px;
+		top: auto;
+		width: auto;
+		box-shadow: none;
+		outline: none;
+		border: none;
+		border-radius: 10px;
+		color: #4eabb9;
+	}
+
+	.sentence-part {
+		color: #4eabb9;
+		font-size: 56px;
+		margin: 0;
+		max-width: 100%;
+		white-space: pre-wrap;
+	}
+
+	.level-bar-container {
+		position: absolute;
+		top: 10%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background-color: transparent;
+		display: flex;
+		flex-flow: row;
+		gap: 7px;
+		box-shadow: 0px 3px 10px 1px rgba(0,0,0,0.2);
+	}
+
+	.level-square {
+		width: 27.5px;
+		height: 7.5px;
+		border-radius: 5px;
+	}
+
+	.options-button {
+		position: absolute;
+		top: 5%;
+		right: 5%;
+	}
+
+	.three-dots {
+		width: 35px;
+		height: 35px;
+	}
+
+	.word-front-container {
+		display: flex;
+		flex-flow: column;
+		position: absolute;
+		left: 5%;
+		transform: translateY(-50%);
+		gap: 2rem;
+		top: 45%;
+	}
+
+	.word-front {
+		font-size: 36px;
+		font-weight: bold;
+		letter-spacing: 1px;
+	}
+
+	.word-front-description {
+		font-size: 20px;
+	}
+
+	.non-form {
+		display: inline-block;
+		width: auto;
+	}
+
+	.decks-dropdown {
+		position: absolute;
+		background-color: #1e1f21;
+		border-radius: 10px;
+		width: 12rem;
+		display: none;
+		top: 12%;
+		left: 4%;
+		z-index: 1;
+		transition: opacity 0.3s ease-in-out;
+	}
+
+		.decks-dropdown ul {
+			list-style-type: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		.decks-dropdown li {
+			padding: 0.5rem;
+			color: #babecc;
+			cursor: pointer;
+			transition: background-color 0.2s;
+		}
+
+			.decks-dropdown li:hover {
+				background-color: #1c1d1f;
+			}
+
+	.description-bottom {
+		position: absolute;
+		bottom: 4%;
+		left: 4%;
+		background-color: #212121;
+		border-radius: 10px;
+		font-size: 20px;
+		width: 10rem;
+		height: 3rem;
+		text-align: center;
+		line-height: 3rem;
+	}
+</style>
+
+<span id="hiddenText" style="font-size: 56px; visibility: hidden; position:absolute; top:0; right:0;">@Model.Back</span>
+<body>
+	<div class="base-wrapper">
+		<div class="base-container">
+			<div id="deckParagraph" class="deck-info-container">
+				<p class="info-title">Deck: </p>
+				<p class="info-body">@currentDeck.DeckName</p>
+			</div>
+			<div id="dropdown" class="decks-dropdown" style="display:none;">
+				<ul>
+					@foreach (var deck in decksForDropDown) {
+						<li>
+							<a style="text-decoration:none; color:#babecc; display:block; block-size:stretch;" asp-action="Learn" asp-route-currentDeckId="@deck.Id">
+								@deck.DeckName
+							</a>
+						</li>
+					}
+				</ul>
+			</div>
+			<div class="level-bar-container">
+				@{
+					var filled = Math.Floor((double)Model.Level / 20);
+					var half = Model.Level % 2;
+					var rest = 5 - filled - half;
+					Console.WriteLine("Filled: " + filled + " | Half: " + half + " | Rest: " + rest);
+					string mainColor = "";
+					string secColor = "";
+					if (filled == 1) {
+						mainColor = "#aa531b";
+						secColor = "#663517";
+					} else if (filled == 2) {
+						mainColor = "#a69d3d";
+						secColor = "#696645";
+					} else if (filled == 3) {
+						mainColor = "#4eabb9";
+						secColor = "#2e4242";
+					} else if (filled == 4) {
+						mainColor = "#4eb992";
+						secColor = "#4c7969";
+					} else if (filled == 5) {
+						mainColor = "#4eb967";
+						secColor = "#4eb967";
+					} else if (Model.Level < 20 && Model.Level > 0) {
+						secColor = "#663517";
+						<div class="level-square" style="background-color:@secColor;"></div>
+						rest--;
+					}
+
+					for (int i = 0; i < filled; i++) {
+						<div class="level-square" style="background-color:@mainColor;"></div>
+					}
+					if (half != 0) {
+						<div class="level-square" style="background-color:@secColor;"></div>
+					}
+					for (int i = 0; i < rest; i++) {
+						<div class="level-square" style="background-color:#292929;"></div>
+					}
+				}
+			</div>
+			@if (Model.Level == 0) {
+				<p style="color:#a7521b; font-size:18px; position:absolute; left:46.5%; top:3%;">New word!</p>
+			}
+			<a class="options-button"><img src="~/images/threedotsicon.svg" class="three-dots" /></a>
+			<div class="sentence-input-wrapper" style="font-family:'Lucida Bright';">
+				<div>
+					<span class="sentence-part" id="firstPart">@sentenceBackLeft</span>
+					<form id="wordForm" asp-action="Learn" method="post" class="non-form">
+						<input type="hidden" name="id" value="@Model.Id" />
+						<input id="wordInput" type="text" class="word-input" name="userInput" autocomplete="off" />
+					</form>
+					<span class="sentence-part" id="secondPart">@sentenceBackRight</span>
+				</div>
+			</div>
+			<div class="description-bottom">@Model.Description</div>
+		</div>
+		<div class="front-wrapper">
+			<div class="word-front-container">
+				<div class="word-front">@Model.Front.ToLower()</div>
+				<div class="word-front-description">@frontSentence</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+			var dropdown = $("#dropdown");
+			var clickMe = $("#deckParagraph");
+
+			// Handle the click event on the info box
+			clickMe.click(function (event) {
+				event.stopPropagation(); // Prevent the click from propagating to document
+				dropdown.slideToggle();
+			});
+
+			// Handle the click event on the container to prevent closing
+			dropdown.click(function (event) {
+				event.stopPropagation(); // Prevent the click from propagating to document
+			});
+
+			// Handle the click event on the document to close the dropdown
+			$(document).click(function (event) {
+				if (!clickMe.is(event.target) && !dropdown.is(event.target) && dropdown.has(event.target).length === 0) {
+					dropdown.slideUp();
+				}
+			});
+		});
+
+	</script>
+
+	<script>
+		var waitingForConfirmation = false;
+		var confirmationPressed = false;
+		var timer;
+
+		window.onload = function () {
+			var input = document.getElementById("wordInput");
+			var hiddenText = document.getElementById("hiddenText");
+
+			var calculatedWidth = hiddenText.offsetWidth + 10;
+			input.style.width = calculatedWidth + "px";
+
+			document.getElementById("wordForm").addEventListener("submit", function (event) {
+				event.preventDefault(); // Prevent the default form submission
+
+				if (!waitingForConfirmation && !confirmationPressed) {
+					var userInput = input.value.trim().toLowerCase();
+					var correctAnswer = hiddenText.textContent.trim().toLowerCase();
+					var isCorrect = userInput === correctAnswer;
+
+					if (isCorrect) {
+						input.style.color = "green";
+						input.style.transition = "background-color 0.2s";
+						input.style.transition = "color 0.2s";
+
+						waitingForConfirmation = true;
+					} else {
+						input.placeholder = hiddenText.textContent || ""; // Set placeholder to .Back string if available
+						input.value = ""; // Clear the input value
+					}
+				} else if (waitingForConfirmation && !confirmationPressed) {
+					clearTimeout(timer); // Clear the timer if there's an existing timer
+					input.style.color = "#4eabb9";
+					input.style.backgroundColor = "#191919";
+					confirmationPressed = true;
+					waitingForConfirmation = false;
+					timer = setTimeout(function () {
+						document.getElementById("wordForm").submit(); // Submit the form after the timer expires
+					}, 1000); // Set timer for 1 second before allowing another submission
+				} else if (waitingForConfirmation && confirmationPressed) {
+					clearTimeout(timer); // Clear the timer if there's an existing timer
+					waitingForConfirmation = false;
+					confirmationPressed = false;
+					input.value = ""; // Clear the input value
+					document.getElementById("wordForm").submit(); // Submit the form on the second Enter press
+				}
+			});
+		};
+	</script>
+}
+
+

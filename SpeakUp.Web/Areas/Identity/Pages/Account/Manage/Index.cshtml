@@ -1,0 +1,177 @@
+﻿@page
+@using SpeakUp.Utilities;
+@model IndexModel
+@{
+	ViewData["Title"] = "Profile";
+	ViewData["ActivePage"] = ManageNavPages.Index;
+}
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+	ApplicationUser user = await UserManager.GetUserAsync(User);
+}
+
+<style>
+	.form-control:focus, .form-control:-webkit-autofill,
+	.form-focus:-webkit-autofill:focus, .form-control:-webkit-autofill:active,
+	.form-control:not(:placeholder-shown):focus, .form-control:-webkit-autofill:hover {
+		background-color: #191919 !important;
+		color: #babecc;
+		outline: none;
+		box-shadow: none;
+		-webkit-box-shadow: 0 0 0px 1000px #191919 inset;
+		border: 5px solid transparent !important;
+		-webkit-text-fill-color: #babecc;
+	}
+
+
+	.form-label {
+		color: #4e5366;
+		position: absolute;
+		right: 0%;
+		top: 20%;
+		font-size: 14px;
+	}
+
+	input[type="file"]::-webkit-file-upload-button {
+		border: none;
+		background: #babecc;
+		color: #191919;
+		font-size: 16px;
+		cursor: pointer;
+		border-radius: 5px;
+		height: 100%;
+		margin-top: auto;
+		font-family: Ebrima;
+	}
+
+	#profile-image {
+		border-radius: 50%;
+	}
+
+	.offset-border {
+		display: inline-block;
+		border: 4px solid #babecc; /* Border color */
+		border-radius: 50%;
+		padding: 4px; /* Adjust as needed for the offset */
+		margin-bottom: 1rem; /* Add spacing between the image and the form sections */
+	}
+
+	.account-save-button {
+		display: block;
+		margin: 0 auto;
+		font-family: Ebrima;
+		font-weight: bold;
+		font-size: 22px;
+		background: #babecc;
+		color: #191919;
+		border-radius: 10px;
+		border: none;
+		margin-top: 1rem;
+		height: 3rem;
+		width: 6rem;
+	}
+</style>
+
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="form-wrapper">
+	@if (User.IsInRole(WebSiteRole.WebSite_Admin))
+	{
+		<p style="font-size:24px;">Your Admin profile:</p>
+	}
+	else if (User.IsInRole(WebSiteRole.WebSite_Dev))
+	{
+		<p style="font-size:24px;">Your Developer profile:</p>
+	}
+	else
+	{
+		<p style="font-size:24px;">Your profile:</p>
+	}
+	<div class="separator"></div>
+	<form id="profile-form" method="post" enctype="multipart/form-data">
+		<div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+		@if (user.ProfilePictureUrl != null)
+		{
+			<div style="text-align:center;">
+				<div class="offset-border">
+					<img id="profile-image" src="~/ImagesProfiles/@user.ProfilePictureUrl" />
+				</div>
+			</div>
+		}
+		<div id="cropped-image-preview" style="display: none;"></div>
+		<div class="form-section">
+			<label asp-for="Input.ProfilePictureUrl" class="form-label">Profile picture</label>
+			<input id="input-image" asp-for="Input.ProfilePictureUrl" type="file" class="form-control" />
+			<span asp-validation-for="Input.ProfilePictureUrl" class="text-danger"></span>
+		</div>
+		<div class="form-section" id="crop-section" style="display: none;">
+			<input type="hidden" asp-for="Input.CroppedProfilePicture" />
+			<button id="save-image-button" type="button" class="btn btn-primary">Save Image</button>
+		</div>
+		<div class="form-section">
+			<label asp-for="Input.DisplayName" class="form-label">Display name</label>
+			<input asp-for="Input.DisplayName" class="form-control" placeholder="Choose your Display Name." />
+			<span asp-validation-for="Input.DisplayName" class="text-danger"></span>
+		</div>
+		<div class="form-section">
+			<label asp-for="UserName" class="form-label">Username</label>
+			<input asp-for="UserName" class="form-control" placeholder="Change your Username." />
+			<span asp-validation-for="UserName" class="text-danger"></span>
+		</div>
+		<div class="form-section">
+			<label asp-for="Input.Email" class="form-label">Email</label>
+			<input asp-for="Input.Email" class="form-control" placeholder="Please enter your Email." />
+			<span asp-validation-for="Input.Email" class="text-danger"></span>
+		</div>
+		<div class="form-section">
+			<label asp-for="Input.OldPassword" class="form-label">Old password</label>
+			<input asp-for="Input.OldPassword" class="form-control" />
+			<span asp-validation-for="Input.OldPassword" class="text-danger"></span>
+		</div>
+		<div class="form-section">
+			<label asp-for="Input.NewPassword" class="form-label">New password</label>
+			<input asp-for="Input.NewPassword" class="form-control" />
+			<span asp-validation-for="Input.NewPassword" class="text-danger"></span>
+		</div>
+		<div class="form-section">
+			<label asp-for="Input.ConfirmPassword" class="form-label">Confirm password</label>
+			<input asp-for="Input.ConfirmPassword" class="form-control" />
+			<span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+		</div>
+
+		<button id="update-profile-button" type="submit" class="save-button">Save</button>
+	</form>
+</div>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css"> <!-- Add Croppie CSS -->
+	<script defer src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script> <!-- Add Croppie JS -->
+	<script defer src="~/js/cropping-script.js"></script> <!-- Update the path to the "cropping-script.js" file -->
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const inputFields = document.querySelectorAll('.form-control');
+
+			inputFields.forEach(function (inputField) {
+				const formSection = inputField.closest('.form-section');
+				const formLabel = formSection.querySelector('.form-label');
+
+				function updateLabelColor() {
+					if (inputField.value.trim() !== '') {
+						formLabel.style.color = '#868eac';
+					} else {
+						formLabel.style.color = '#4e5366'; // Reset to default color
+					}
+				}
+
+				// Initial color update
+				updateLabelColor();
+
+				// Listen for both input and change events
+				inputField.addEventListener('input', updateLabelColor);
+				inputField.addEventListener('change', updateLabelColor);
+			});
+		});
+	</script>
+}
+

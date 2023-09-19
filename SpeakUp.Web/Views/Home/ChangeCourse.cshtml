@@ -1,0 +1,121 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using SpeakUp.Models;
+@model List<SpeakUp.ViewModels.DeckViewModel>
+@inject UserManager<ApplicationUser> UserManager
+@{
+	ApplicationUser user = await UserManager.GetUserAsync(User);
+}
+<style>
+	.course-block {
+		width: 400px;
+		height: 266px;
+		background-color: #242629;
+		background-repeat: no-repeat;
+		border-radius: 15px;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: flex-end;
+		margin-right: 20px;
+		margin-bottom: 20px;
+	}
+
+	.courses-container {
+		display: flex;
+		flex-flow: wrap;
+		margin: 2rem;
+		width: stretch;
+	}
+
+	.course-block-text {
+		color: #b6bac8;
+		font-family: Ebrima;
+		font-weight: normal;
+		font-size: 24px;
+		position: absolute;
+		left: 50%; /* Center horizontally */
+		transform: translateX(-50%);
+		bottom: 1%;
+	}
+
+	.deck-wrapper {
+		position: relative;
+		z-index: 10;
+	}
+
+	.decks-courses-wrapper {
+		display: flex;
+		flex-direction: column;
+		background-color: #191919;
+		border-radius: 10px;
+		height: 50rem;
+		margin-top: 3rem;
+	}
+
+	.course-filter.hidden {
+		opacity: 0;
+		pointer-events: none;
+		height: 0;
+		padding: 0;
+		margin: 0;
+		border: none;
+	}
+</style>
+
+<body>
+	<div class="decks-courses-wrapper">
+		<input type="text" class="search-bar" id="searchInput" placeholder="Search Official Courses..." />
+		<div class="courses-container">
+			@foreach (var item in Model)
+			{
+				if (item.UserId == user.Id)
+				{
+					<form id="postForm" asp-controller="Home" asp-action="ChangeCourse" method="post" style="display: none;">
+						<input id="postInput" type="hidden" name="id" value="" />
+					</form>
+
+					<a href="#" onclick="triggerPost(@item.Id); return false;">
+						<div class="course-block course-filter" data-course-name="@item.DeckName" style="background-image: url('@Url.Content("~/deckimages/" + item.DeckImage)');">
+							<p class="course-block-text">@item.DeckName</p>
+						</div>
+					</a>
+				}
+				else
+				{
+					<a asp-controller="Home" asp-action="AddCourse" asp-route-id="@item.Id" class="deck-wrapper" style="cursor:pointer;">
+						<div class="course-block course-filter" data-course-name="@item.DeckName" style="background-image: url('@Url.Content("~/deckimages/" + item.DeckImage)');">
+							<p class="course-block-text">@item.DeckName</p>
+						</div>
+					</a>
+				}
+			}
+		</div>
+	</div>
+</body>
+
+<script>
+	const searchInput = document.getElementById('searchInput');
+	const courseFilters = document.querySelectorAll('.course-filter');
+
+	searchInput.addEventListener('input', () => {
+		const searchText = searchInput.value.toLowerCase();
+
+		courseFilters.forEach(courseFilter => {
+			const courseName = courseFilter.getAttribute('data-course-name').toLowerCase();
+			const isVisible = courseName.includes(searchText);
+
+			if (isVisible) {
+				courseFilter.style.display = 'block';
+			} else {
+				courseFilter.style.display = 'none';
+			}
+		});
+	});
+</script>
+
+<script>
+    function triggerPost(id) {
+        document.getElementById("postInput").value = id;
+        document.getElementById("postForm").submit();
+    }
+</script>

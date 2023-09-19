@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33403.182
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpeakUp.Web", "SpeakUp.Web\SpeakUp.Web.csproj", "{F67B9108-878E-41AA-97CE-5AAC6EC5E75A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpeakUp.Models", "SpeakUp.Models\SpeakUp.Models.csproj", "{1512C24B-EAEE-4C6F-8A81-CBA748C6D2B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpeakUp.Repository", "SpeakUp.Repository\SpeakUp.Repository.csproj", "{46BA90B2-C4DA-41AD-BC46-A63A892BB25F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpeakUp.ViewModels", "SpeakUp.ViewModels\SpeakUp.ViewModels.csproj", "{20E2D15A-5521-4DAE-9580-F7ADFC62C546}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpeakUp.Services", "SpeakUp.Services\SpeakUp.Services.csproj", "{34314DE0-B7E8-4B68-AC33-9157329F0F6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpeakUp.Utilities", "SpeakUp.Utilities\SpeakUp.Utilities.csproj", "{24FDE7DF-F5D9-4490-9C77-7EF84C1CE171}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6887338C-C7E2-46D3-95E9-FDF80B1A24AD}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F67B9108-878E-41AA-97CE-5AAC6EC5E75A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F67B9108-878E-41AA-97CE-5AAC6EC5E75A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F67B9108-878E-41AA-97CE-5AAC6EC5E75A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F67B9108-878E-41AA-97CE-5AAC6EC5E75A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1512C24B-EAEE-4C6F-8A81-CBA748C6D2B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1512C24B-EAEE-4C6F-8A81-CBA748C6D2B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1512C24B-EAEE-4C6F-8A81-CBA748C6D2B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1512C24B-EAEE-4C6F-8A81-CBA748C6D2B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46BA90B2-C4DA-41AD-BC46-A63A892BB25F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46BA90B2-C4DA-41AD-BC46-A63A892BB25F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46BA90B2-C4DA-41AD-BC46-A63A892BB25F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46BA90B2-C4DA-41AD-BC46-A63A892BB25F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20E2D15A-5521-4DAE-9580-F7ADFC62C546}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20E2D15A-5521-4DAE-9580-F7ADFC62C546}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20E2D15A-5521-4DAE-9580-F7ADFC62C546}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20E2D15A-5521-4DAE-9580-F7ADFC62C546}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34314DE0-B7E8-4B68-AC33-9157329F0F6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34314DE0-B7E8-4B68-AC33-9157329F0F6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34314DE0-B7E8-4B68-AC33-9157329F0F6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34314DE0-B7E8-4B68-AC33-9157329F0F6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24FDE7DF-F5D9-4490-9C77-7EF84C1CE171}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24FDE7DF-F5D9-4490-9C77-7EF84C1CE171}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24FDE7DF-F5D9-4490-9C77-7EF84C1CE171}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24FDE7DF-F5D9-4490-9C77-7EF84C1CE171}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {07E65035-EB9D-46BB-9BF5-20319B57F80F}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,60 @@
+﻿@model SpeakUp.ViewModels.SentenceViewModel
+
+@{
+	ViewData["Title"] = "Edit";
+}
+
+
+<div class="form-wrapper">
+	<p style="font-size:24px;">Edit deck:</p>
+	<div class="separator"></div>
+	<form asp-action="Edit" method="post" enctype="multipart/form-data">
+		<div asp-validation-summary="ModelOnly" class="text-danger" enc></div>
+		<input type="hidden" asp-for="Id" />
+		<span asp-validation-for="Id"></span>
+		<input type="hidden" asp-for="WordId" />
+		<span asp-validation-for="WordId"></span>
+		<div class="form-section">
+			<label asp-for="Front" class="form-label"></label>
+			<input asp-for="Front" class="form-control" />
+			<span asp-validation-for="Front" class="text-danger"></span>
+		</div>
+		<div class="form-section">
+			<label asp-for="Back" class="form-label"></label>
+			<input asp-for="Back" class="form-control" />
+			<span asp-validation-for="Back" class="text-danger"></span>
+		</div>
+		<input type="submit" value="Save" class="save-button" />
+	</form>
+</div>
+
+<a class="link-button" asp-action="Index">Back to List</a>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const inputFields = document.querySelectorAll('.form-control');
+
+			inputFields.forEach(function (inputField) {
+				const formSection = inputField.closest('.form-section');
+				const formLabel = formSection.querySelector('.form-label');
+
+				function updateLabelColor() {
+					if (inputField.value.trim() !== '') {
+						formLabel.style.color = '#868eac';
+					} else {
+						formLabel.style.color = '#4e5366'; // Reset to default color
+					}
+				}
+
+				updateLabelColor();
+
+				inputField.addEventListener('input', updateLabelColor);
+				inputField.addEventListener('change', updateLabelColor);
+			});
+		});
+	</script>
+}

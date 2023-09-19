@@ -1,0 +1,307 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    font-family: 'Lucida Sans Unicode';
+    margin-bottom: 60px;
+    display: flex;
+    background-color: #242629;
+    color: #191919;
+}
+
+img {
+    image-rendering: optimizeQuality;
+}
+
+.navbar-vertical {
+    font-family: 'Lucida Sans Unicode';
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0.8rem;
+    padding-top: 1rem;
+    background-color: #191919;
+}
+
+
+.nav-bottom {
+    margin-top: auto;
+    text-align: center;
+}
+
+.nav-button-text {
+    font-weight: bold;
+    font-size: 16px;
+    color: #868eac;
+    text-decoration: none;
+    margin-top: 14px;
+    margin-right: 1rem;
+}
+
+.nav-button-image {
+    margin-left: 1rem;
+    margin-right: 2rem;
+    width: 2rem;
+    height: auto;
+}
+
+.nav-item {
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    border-radius: 15px;
+    text-decoration: none;
+}
+
+    .nav-item:hover {
+        background-color: #212325;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+.selected-nav-item {
+    background-color: #623d79;
+    color: #babecc;
+}
+
+    .selected-nav-item:hover {
+        background-color: #623d79;
+    }
+
+    .selected-nav-item p {
+        color: #babecc;
+    }
+
+    .selected-nav-item .nav-button-image {
+        filter: brightness(0) saturate(100%) invert(100%) sepia(13%) saturate(6304%) hue-rotate(178deg) brightness(82%) contrast(93%);
+    }
+
+.separator {
+    width: 100%;
+    height: 1px;
+    background-color: #babecc; /* Separator line color */
+    margin-bottom: 1rem;
+}
+
+.form-wrapper {
+    background-color: #191919;
+    width: 35rem;
+    color: #babecc;
+    border-radius: 15px;
+    border: solid;
+    border-width: 2rem;
+    border-color: #191919;
+    border-top-width: 1rem;
+    margin-top: 32px;
+    border-bottom-left-radius: 0px;
+}
+
+.form-section {
+    background-color: #191919;
+    margin-bottom: auto;
+    position: relative;
+    border-bottom: solid;
+    border-width: 1px;
+    border-color: #32373f;
+    transition: border-color 0.3s ease-in-out;
+}
+
+    .form-section:focus-within {
+        border-color: #babecc;
+    }
+
+.form-label {
+    color: #4e5366;
+    position: absolute;
+    right: 0%;
+    top: 20%;
+    font-size: 14px;
+}
+
+.save-button {
+    display: block;
+    margin: 0 auto;
+    font-family: Ebrima;
+    font-weight: bold;
+    font-size: 22px;
+    background: #babecc;
+    color: #191919;
+    border-radius: 10px;
+    border: none;
+    margin-top: 1rem;
+    height: 3rem;
+    width: 6rem;
+}
+
+
+.form-control {
+    height: 3rem;
+    background-color: #191919;
+    border: none;
+    color: #babecc;
+    padding-right: 7rem;
+    box-shadow: none;
+    outline: none;
+    transition: none;
+}
+
+    .form-control:focus {
+        background-color: #191919;
+        color: #babecc;
+        outline: none;
+        box-shadow: none;
+    }
+
+.save-button {
+    display: block;
+    margin: 0 auto;
+    font-family: Ebrima;
+    font-weight: bold;
+    font-size: 22px;
+    background: #babecc;
+    color: #191919;
+    border-radius: 10px;
+    border: none;
+    margin-top: 1rem;
+    height: 3rem;
+    width: 6rem;
+    transition: all 0.2s ease-in-out;
+}
+
+    .save-button:hover {
+        background-color: #9a9da9;
+    }
+
+input[type="file"]::-webkit-file-upload-button {
+    border: none;
+    background: #babecc;
+    color: #191919;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    height: 100%;
+    margin-top: auto;
+    font-family: Ebrima;
+}
+
+.link-button {
+    color: #9f6dbc;
+    background-color: #191919;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 20px;
+    padding: 0.5rem;
+    width: fit-content;
+}
+
+    .link-button:hover {
+        color: #babecc;
+    }
+
+.search-bar {
+    background-color: #242629;
+    outline: none;
+    border-radius: 5px;
+    border: none;
+    margin: 2rem;
+    margin-bottom: 0;
+    margin-top: 1rem;
+    font-size: 24px;
+    color: #babecc;
+    width: stretch;
+    height: 3rem;
+    padding-inline: 1rem;
+}
+
+    .search-bar::placeholder {
+        color: #868eac;
+    }
+
+
+.course-block:hover {
+    background-color: #222326;
+    transition: all 0.2s;
+}
+
+
+tr:nth-child(even) td, tr:nth-child(odd) td {
+    transition: all 0.2s ease-in-out;
+}
+
+tr:nth-child(even):hover td, tr:nth-child(odd):hover td {
+    background-color: #222326 !important;
+}
+
+.progress-bar {
+    margin-top: 0.3rem;
+    width: 100%;
+    background-color: #32373f;
+    border-radius: 5px;
+    height: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(25, 25, 25, 0.3);
+}
+
+.progress-level {
+    background-color: #4eb953;
+    border-radius: 2px;
+    height: 6px;
+    width: 0;
+    position: center;
+    top: 0;
+    left: 0;
+}
+
+.difficulty-bar {
+    display: flexbox;
+    flex-direction: column; /* Keep the original column layout */
+    transform: scaleY(-1);
+    position: absolute;
+    bottom: 0;
+    left: 42%;
+    background-color: #32373f;
+    justify-content: center;
+    height: 82%;
+    overflow: hidden;
+    width: 26px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(25, 25, 25, 0.3);
+}
+
+.difficulty-level {
+    position: relative; /* Position absolutely within the difficulty-bar */
+    left: 10%;
+    background-color: #4eabb9;
+    height: 3px;
+    width: 20px;
+    margin-top: 1px;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(25, 25, 25, 0.3);
+}
+
+.top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 1rem;
+    margin-bottom: 0
+}

@@ -1,0 +1,81 @@
+﻿@model SpeakUp.ViewModels.WordViewModel
+
+@{
+	ViewData["Title"] = "Edit";
+}
+
+
+<div class="form-wrapper">
+	<p style="font-size:24px;">Edit deck:</p>
+	<div class="separator"></div>
+	<form asp-action="Edit" method="post" enctype="multipart/form-data">
+		<div asp-validation-summary="ModelOnly" class="text-danger" enc></div>
+		<input type="hidden" asp-for="Id" />
+		<span asp-validation-for="Id"></span>
+		<input type="hidden" asp-for="Level" />
+		<span asp-validation-for="Level"></span>
+		<input type="hidden" asp-for="DateAdded" />
+		<span asp-validation-for="DateAdded"></span>
+		<input type="hidden" asp-for="LastReviewDate" />
+		<span asp-validation-for="LastReviewDate"></span>
+		<input type="hidden" asp-for="NextReviewDate" />
+		<span asp-validation-for="NextReviewDate"></span>
+		<input type="hidden" asp-for="DeckId" />
+		<span asp-validation-for="DeckId"></span>
+		<input type="hidden" asp-for="GrammarId" />
+		<span asp-validation-for="GrammarId"></span>
+
+		<div class="form-section">
+			<label asp-for="Front" class="form-label"></label>
+			<input asp-for="Front" class="form-control" />
+			<span asp-validation-for="Front" class="text-danger"></span>
+		</div>
+		<div class="form-section">
+			<label asp-for="Back" class="form-label"></label>
+			<input asp-for="Back" class="form-control" />
+			<span asp-validation-for="Back" class="text-danger"></span>
+		</div>
+		<div class="form-section">
+			<label asp-for="Description" class="form-label"></label>
+			<input asp-for="Description" class="form-control" required="false" />
+			<span asp-validation-for="Description" class="text-danger"></span>
+		</div>
+		<div class="form-section">
+			<label asp-for="Difficulty" class="form-label">Difficulty (0-10)</label>
+			<input type="number" min="0" max="10" asp-for="Difficulty" class="form-control" required="false" />
+			<span asp-validation-for="Difficulty" class="text-danger"></span>
+		</div>
+		<input type="submit" value="Save" class="save-button" />
+	</form>
+</div>
+
+<a class="link-button" asp-action="Index">Back to List</a>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const inputFields = document.querySelectorAll('.form-control');
+
+			inputFields.forEach(function (inputField) {
+				const formSection = inputField.closest('.form-section');
+				const formLabel = formSection.querySelector('.form-label');
+
+				function updateLabelColor() {
+					if (inputField.value.trim() !== '') {
+						formLabel.style.color = '#868eac';
+					} else {
+						formLabel.style.color = '#4e5366'; // Reset to default color
+					}
+				}
+
+				updateLabelColor();
+
+				inputField.addEventListener('input', updateLabelColor);
+				inputField.addEventListener('change', updateLabelColor);
+			});
+		});
+	</script>
+}

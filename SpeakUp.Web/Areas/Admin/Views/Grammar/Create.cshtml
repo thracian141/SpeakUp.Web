@@ -1,0 +1,70 @@
+﻿@using SpeakUp.Utilities;
+@model SpeakUp.ViewModels.GrammarViewModel
+
+@{
+	ViewData["Title"] = "Create";
+	var currentDeck = ViewData["CurrentDeck"] as SpeakUp.ViewModels.DeckViewModel;
+}
+
+<style>
+	.form-check {
+		margin-top:0.5rem;
+		height: 2rem;
+		width: 2rem;
+		background: #242629;
+		color:#babecc;
+		border-radius:10px !important;
+	}
+</style>
+
+<div class="form-wrapper">
+	<p style="font-size:24px;">Create Grammar as Admin:</p>
+	<div class="separator"></div>
+	<form asp-action="Create" method="post" enctype="multipart/form-data">
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+		<input type="hidden" asp-for="DeckId" value="@currentDeck.Id"/>
+		<span asp-validation-for="DeckId" style="display:none;"></span>
+		<input type="hidden" asp-for="Deck" value="@currentDeck" />
+		<span asp-validation-for="Deck" style="display:none;"></span>
+
+		<div class="form-section">
+			<label asp-for="Name" class="form-label">Name</label>
+			<input asp-for="Name" class="form-control" />
+			<span asp-validation-for="Name" class="text-danger"></span>
+		</div>
+		<div class="form-section">
+			<label asp-for="GrammarUrl" class="form-label">Page Link</label>
+			<input asp-for="GrammarUrl" class="form-control" />
+			<span asp-validation-for="GrammarUrl" class="text-danger"></span>
+		</div>
+		<input type="submit" value="Create" class="save-button" />
+	</form>
+</div>
+
+<a class="link-button" asp-action="Index" style="bottom:50%;">Back to List</a>
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const inputFields = document.querySelectorAll('.form-control');
+
+		inputFields.forEach(function (inputField) {
+			const formSection = inputField.closest('.form-section');
+			const formLabel = formSection.querySelector('.form-label');
+
+			function updateLabelColor() {
+				if (inputField.value.trim() !== '') {
+					formLabel.style.color = '#868eac';
+				} else {
+					formLabel.style.color = '#4e5366'; // Reset to default color
+				}
+			}
+
+			updateLabelColor();
+
+			inputField.addEventListener('input', updateLabelColor);
+			inputField.addEventListener('change', updateLabelColor);
+		});
+	});
+</script>

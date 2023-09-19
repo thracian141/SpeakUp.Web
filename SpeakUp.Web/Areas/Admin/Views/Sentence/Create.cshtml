@@ -1,0 +1,30 @@
+﻿@model SpeakUp.ViewModels.SentenceViewModel
+@{
+	var currentWord = ViewData["CurrentWord"] as SpeakUp.ViewModels.WordViewModel;
+}
+
+<div class="form-wrapper">
+	<p style="font-size:24px;">Add Sentence to Word "@currentWord.Back":</p>
+	<div class="separator"></div>
+	<form asp-action="Create">
+		<input type="hidden" asp-for="WordId" value="@currentWord.Id"/>
+		<span asp-validation-for="WordId"></span>
+
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<div class="form-section">
+			<label asp-for="Front" class="control-label"></label>
+			<input asp-for="Front" class="form-control" />
+			<span asp-validation-for="Front" class="text-danger"></span>
+		</div>
+		<div class="form-section">
+			<label asp-for="Back" class="control-label"></label>
+			<input asp-for="Back" class="form-control" />
+			<span asp-validation-for="Back" class="text-danger"></span>
+		</div>
+		<input type="submit" value="Create" class="save-button" />
+	</form>
+</div>
+
+<a asp-action="Index" class="link-button">Back to List</a>
+
+
