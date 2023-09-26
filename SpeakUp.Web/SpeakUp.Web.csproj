@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\svelte-assets\**" />
-    <Content Remove="wwwroot\svelte-assets\**" />
-    <EmbeddedResource Remove="wwwroot\svelte-assets\**" />
-    <None Remove="wwwroot\svelte-assets\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="cloudscribe.Web.Pagination" Version="6.0.0" />
     <PackageReference Include="jQuery" Version="3.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.9" />
