@@ -5,40 +5,40 @@
 @inject UserManager<ApplicationUser> UserManager
 
 @{
-	ApplicationUser user = await UserManager.GetUserAsync(User);
-	bool isSignedIn = SignInManager.IsSignedIn(User);
+    ApplicationUser user = await UserManager.GetUserAsync(User);
+    bool isSignedIn = SignInManager.IsSignedIn(User);
 }
 
 <nav class="navbar-vertical">
-	<ul class="nav flex-column">
-		<li>
-			<a class="nav-item title-element" href="@Url.Action("Index", "Users", new { area = "Admin" })" style="text-decoration:none">
-				<img src="~/images/speakuplogo.svg" class="nav-button-image" />
-				<p class="nav-button-text" style="color:#babecc;">SpeakUP</p>
-			</a>
-			<a class="nav-item" href="@Url.Action("Index", "Home", new { area = "" })" style="text-decoration:none">
-				<img class="nav-button-image" src="~/images/homeicon.svg" />
-				<p class="nav-button-text">Home</p>
-			</a>
-			@if (isSignedIn) {
-				<a class="nav-item" href="@Url.Action("Learn", "Learn", new { area = "Admin", currentDeckId = user.LastDeck})" style="text-decoration:none">
-					<img class="nav-button-image" src="~/images/cardsicon.svg" />
-					<p class="nav-button-text">Learn</p>
-				</a>
-			}
-			<a class="nav-item" href="@Url.Action("Index", "Decks", new { area = "Admin" })" style="text-decoration:none">
-				<img class="nav-button-image" src="~/images/decksIcon.svg" />
-				<p class="nav-button-text">Decks</p>
-			</a>
-			@if (isSignedIn) {
-				<a class="nav-item" href="@Url.Action("Manage", "Account", new { area = "Identity" })" id="manage" style="text-decoration:none">
-					<img class="nav-button-image" src="~/images/accounticon.svg" />
-					<p class="nav-button-text">Account</p>
-				</a>
-			}
-		</li>
-	</ul>
-	<ul class="nav flex-column" style="margin-top:auto;">
-		<partial name="_LoginPartial" />
-	</ul>
+    <ul class="nav flex-column">
+        <li>
+            <a class="nav-item title-element" href="@Url.Action("Index", "Users", new { area = "Admin" })" style="text-decoration:none">
+                <img src="~/images/speakuplogo.svg" class="nav-button-image" />
+                <p class="nav-button-text" style="color:#babecc;">SpeakUP</p>
+            </a>
+            <a class="nav-item" href="@Url.Action("Index", "Home", new { area = "" })" style="text-decoration:none">
+                <img class="nav-button-image" src="~/images/homeicon.svg" />
+                <p class="nav-button-text">Home</p>
+            </a>
+            @if (isSignedIn) {
+                <a class="nav-item" href="@Url.Action("Learn", "Learn", new { area = "Admin", currentDeckId = user.LastDeck})" style="text-decoration:none">
+                    <img class="nav-button-image" src="~/images/cardsicon.svg" />
+                    <p class="nav-button-text">Learn</p>
+                </a>
+            }
+            <a class="nav-item" href="@Url.Action("Index", "Decks", new { area = "Admin" })" style="text-decoration:none">
+                <img class="nav-button-image" src="~/images/decksIcon.svg" />
+                <p class="nav-button-text">Decks</p>
+            </a>
+            @if (isSignedIn) {
+                <a class="nav-item" href="@Url.Action("Manage", "Account", new { area = "Identity" })" id="manage" style="text-decoration:none">
+                    <img class="nav-button-image" src="~/images/accounticon.svg" />
+                    <p class="nav-button-text">Account</p>
+                </a>
+            }
+        </li>
+    </ul>
+    <ul class="nav flex-column" style="margin-top:auto;">
+        <partial name="_LoginPartial" />
+    </ul>
 </nav>

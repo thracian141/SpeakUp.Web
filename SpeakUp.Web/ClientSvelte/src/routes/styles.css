@@ -1,0 +1,57 @@
+:root {
+    --font-body: 'Lucida Sans Unicode';
+    --font-important: 'Lucida Brights';
+    font-family: var(--font-body);
+    --fg-color: rgba(184, 188, 202, 1);
+    --fg-color-2: rgba(134, 142, 172, 1);
+    --bg-color: rgba(33, 35, 37, 1);
+    --el-bg-color: rgba(25, 25, 25, 1);
+    --selected-color: #623d79;
+}
+
+body {
+	min-height: 100vh;
+	margin: 0;
+	background-attachment: fixed;
+	background-color: var(--bg-color);
+	background-size: 100vw 100vh;
+    color: var(--fg-color);
+}
+
+a {
+    color: var(--fg-color-2);
+	text-decoration: none;
+    transition: color 0.3s;
+}
+a:hover {
+    color: var(--fg-color);
+    text-decoration: none;
+}
+input {
+    padding:0;
+    padding-left: 1rem;
+    font-size: 14pt;
+}
+input:-webkit-autofill, input:focus, input:-webkit-autofill,
+input:-webkit-autofill:focus, input:-webkit-autofill:active,
+input:not(:placeholder-shown):focus, input:-webkit-autofill:hover {
+    -webkit-box-shadow: 0 0 0px 1000px #191919 inset !important;
+    border: none!important;
+    -webkit-text-fill-color: #babecc;
+}
+.submit-button {
+    background-color: var(--fg-color);
+    outline: none;
+    border: none;
+    border-radius: 6px;
+    width:8rem;
+    height:3rem;
+    font-size: 14pt;
+    font-weight: bold;
+    color:var(--el-bg-color);
+    transition: background-color 0.3s;
+}
+.submit-button:hover {
+    cursor:pointer;
+    background-color: #aaafc3;
+}

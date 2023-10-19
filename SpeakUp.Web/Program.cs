@@ -7,12 +7,24 @@ using SpeakUp.Repository;
 using SpeakUp.Services;
 using SpeakUp.Utilities;
 
+var SvelteSpecificOrigins = "_svelteSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("SpeakUpWebContextConnection") ?? throw new InvalidOperationException("Connection string 'SpeakUpWebContextConnection' not found.");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>().AddDefaultTokenProviders().AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddCors(options => {
+    options.AddPolicy(name: SvelteSpecificOrigins,
+                      policy => {
+                          policy.WithOrigins("http://localhost:5555",
+											  "http://localhost:5555/authenticate",
+                                              "91.139.215.122",
+                                              "192.168.1.106",
+                                              "http://localhost:5000").AllowAnyHeader().AllowAnyMethod();
+                      });
+});
 
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -46,6 +58,8 @@ DataSeeding();
 
 app.UseRouting();
 
+app.UseCors(SvelteSpecificOrigins);
+
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
@@ -66,6 +80,7 @@ app.UseEndpoints(endpoints =>
 	);
     endpoints.MapRazorPages();
 });
+
 
 app.Run();
 

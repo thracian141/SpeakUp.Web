@@ -55,6 +55,12 @@ namespace SpeakUp.Services
 			return vm;
 		}
 
+		public ApplicationUserViewModel GetByEmail(string Email) {
+			var model = _unitOfWork.GenericRepository<ApplicationUser>().GetAll().Where(x => x.Email == Email).FirstOrDefault();
+			var vm = new ApplicationUserViewModel(model);
+			return vm;
+		}
+
 		private List<ApplicationUserViewModel> ConvertViewModelToModel(List<ApplicationUser> modelList)
 		{
 			return modelList.Select(x => new ApplicationUserViewModel(x)).ToList();

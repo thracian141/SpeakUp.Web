@@ -12,5 +12,7 @@ namespace SpeakUp.Services
 	{
 		PagedResult<ApplicationUserViewModel> GetAll(int PageNumber, int PageSize);
 		ApplicationUserViewModel GetById(int id);
-	}
+		ApplicationUserViewModel GetByEmail(string Email);
+
+    }
 }
