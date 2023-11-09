@@ -17,6 +17,7 @@
   <ItemGroup>
     <PackageReference Include="cloudscribe.Web.Pagination" Version="6.0.0" />
     <PackageReference Include="jQuery" Version="3.7.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.9" />
@@ -44,7 +45,6 @@
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="ClientSvelte\build\" />
     <Folder Include="wwwroot\DeckImages\" />
-    <Folder Include="wwwroot\ImagesProfiles\" />
   </ItemGroup>
 
   <ItemGroup>

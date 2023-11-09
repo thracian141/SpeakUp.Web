@@ -1,14 +1,20 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.IdentityModel.Tokens;
 using SpeakUp.Models;
 using SpeakUp.Repository;
 using SpeakUp.Services;
 using SpeakUp.Utilities;
+using System.Diagnostics;
+using System.Text;
 
 var SvelteSpecificOrigins = "_svelteSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
+var jwtKey = builder.Configuration.GetValue<string>("JwtKey");
+var jwtIssuer = builder.Configuration.GetValue<string>("JwtIssuer");
 var connectionString = builder.Configuration.GetConnectionString("SpeakUpWebContextConnection") ?? throw new InvalidOperationException("Connection string 'SpeakUpWebContextConnection' not found.");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
@@ -20,15 +26,34 @@ builder.Services.AddCors(options => {
                       policy => {
                           policy.WithOrigins("http://localhost:5555",
 											  "http://localhost:5555/authenticate",
+											  "http://localhost:5555/account",
                                               "91.139.215.122",
                                               "192.168.1.106",
                                               "http://localhost:5000").AllowAnyHeader().AllowAnyMethod();
                       });
 });
 
+builder.Services.AddAuthentication(options => {
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options => {
+		options.RequireHttpsMetadata = false; // For development, set to true in production
+		options.SaveToken = true;
+		options.TokenValidationParameters = new TokenValidationParameters {
+			ValidateIssuerSigningKey = true,
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+			ValidateIssuer = true,
+			ValidateAudience = true,
+			ValidIssuer = jwtIssuer, // Optional: Set if you have a specific issuer
+			ValidAudience = jwtIssuer, // Optional: Set if you have a specific audience
+			ClockSkew = TimeSpan.FromDays(1) // Reduce the default clock skew to immediate token expiry
+		};
+   });
+
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddTransient<IApplicationUserService, ApplicationUserService>();
 builder.Services.AddTransient<IDeckService, DeckService>();
 builder.Services.AddTransient<IWordService, WordService>();
@@ -60,6 +85,7 @@ app.UseRouting();
 
 app.UseCors(SvelteSpecificOrigins);
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>

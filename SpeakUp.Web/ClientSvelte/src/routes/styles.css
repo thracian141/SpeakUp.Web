@@ -8,7 +8,6 @@
     --el-bg-color: rgba(25, 25, 25, 1);
     --selected-color: #623d79;
 }
-
 body {
 	min-height: 100vh;
 	margin: 0;
@@ -54,4 +53,12 @@ input:not(:placeholder-shown):focus, input:-webkit-autofill:hover {
 .submit-button:hover {
     cursor:pointer;
     background-color: #aaafc3;
+}
+.avatar-xl {
+    width: 200px;
+    height: 200px;
+    border-radius: 5%;
+    object-fit: cover;
+    border: var(--el-bg-color) 4px solid;
+    box-shadow: 0 0 0 10px transparent, 0 0 0 2px var(--fg-color-2); /* Adjust values as needed */
 }

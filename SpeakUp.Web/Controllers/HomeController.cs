@@ -33,6 +33,7 @@ namespace SpeakUp.Web.Controllers
 			_dailyPerformance = dailyPerformance;
 		}
 
+		[HttpGet]
 		public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
 		{
 			DeckViewModel? currentCourse = null;

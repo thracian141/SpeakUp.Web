@@ -2,14 +2,38 @@
     import { browser } from '$app/environment';
 	import { page } from '$app/stores';
     import {onMount} from "svelte";
+    import * as UserManager from "../lib/scripts/UserManager";
     import './styles.css';
     
     let isExpanded = false;
-    
+    let isLogoutConfirmed = false;
+    let isLoggedIn = UserManager.isLoggedIn();
+
     if (browser && localStorage.getItem('isExpanded') === "true") {
         isExpanded = true;
     }
+    function logout() {
+        console.log("Test function called");
+        if (browser){
+            document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            location.href = '/';
+            location.reload();
+        }
+    }
+    function handleLogoutClick(event: Event) {
+        event.preventDefault();
+        if (isLogoutConfirmed) {
+            logout();
+            isLogoutConfirmed = false;
 
+            if (browser){
+                localStorage.removeItem('user');
+                localStorage.removeItem('isLoggedIn');
+            }
+        } else {
+            isLogoutConfirmed = true;
+        }
+    }
     function enableExpansion() {
         if (browser) {
             isExpanded = true;
@@ -21,19 +45,18 @@
             isExpanded = false;
             localStorage.setItem('isExpanded', String(isExpanded));
         }
-    }
-
+    } 
     let currentPath;
-    onMount(() => {
+    onMount(async () => {
         currentPath = window.location.pathname;
     });
 </script>
 
-<header>
+
     <nav id="nav" class={isExpanded ? 'nav-expanded' : ''} on:mouseenter={enableExpansion} on:mouseleave={disableExpansion}>
-        <div class="logo">
+        <div class="logo" style="display: flex; flex-direction:row;">
             <img src="src/lib/icons/speakuplogo.svg" alt="SpeakUp Logo"/>
-            <p>SpeakUP</p>
+            <p>SPEAKUP</p>
         </div>
         <ul id="mainOptions" style="list-style-type:none; padding: 12px;">
 			<a href="/" class="nav-option" class:active={$page.url.pathname == "/"}>
@@ -49,14 +72,26 @@
                 <img src="src/lib/icons/accounticon.svg" alt="Account Icon" /><p>Account</p>
             </a>
         </ul>
-        <ul style="list-style-type:none; padding: 12px; margin-top:auto">
-            <a id="authForm" class="nav-option" href="/authenticate" class:active={$page.url.pathname == "/authenticate"}>
-                <img src="src/lib/icons/loginicon.svg" alt="Authenticate Icon" />
-                <p style="text-overflow:clip; white-space:nowrap">Sign In</p>
-            </a>
-        </ul>
+        {#await isLoggedIn then bool}
+            {#if !bool}
+                <ul style="list-style-type:none; padding: 12px; margin-top:auto">
+                    <a id="authForm" class="nav-option" href="/authenticate" class:active={$page.url.pathname == "/authenticate"}>
+                        <img src="src/lib/icons/loginicon.svg" alt="Authenticate Icon" />
+                        <p style="text-overflow:clip; white-space:nowrap">Sign In</p>
+                    </a>
+                </ul>
+            {:else}
+                <ul style="list-style-type:none; padding: 12px; margin-top:auto">
+                    <a id="authForm" class="nav-option" href="/" class:active={isLogoutConfirmed} on:click|preventDefault={handleLogoutClick}>
+                        <img src="src/lib/icons/logouticon.svg" alt="Authenticate Icon" />
+                        <p style="text-overflow:clip; white-space:nowrap">{isLogoutConfirmed ? 'Confirm' : 'Sign Out'}</p>
+                    </a>
+                </ul>
+            {/if}
+        {/await}
+
     </nav>
-</header>
+
 
 <style>
     .logo {
@@ -67,20 +102,18 @@
     }
     .logo p {
         font-weight: bold;
-        font-size: 16pt;
+        font-size: 1rem;
         opacity: 0;
         transition: opacity 0.2s ease-in-out;
     }
     .logo img {
-        width:3.6rem;
-        height:auto;
-    }
-    header {
-        display:flex;
+        margin-right:0.2rem;
+        width:auto;
+        height:3.3rem;
     }
     nav {
-        width: 5.5vw;
-        height: 100%;
+        width: 5.5rem;
+        height: 100vh;
         background-color: var(--el-bg-color);
         transition: width 0.3s ease-in-out;
         font-weight: bold;
@@ -89,18 +122,20 @@
         overflow: hidden;
     }
     .nav-expanded {
-        width: 11vw;
+        width: 12rem;
     }
 
     .nav-option {
         display:flex;
         flex-direction: row;
-        padding-left: 1.2rem; padding-right: 1.2rem;
-        font-size:14pt;
+        padding-left: 0.9rem; padding-right: 1rem;
+        font-size:1rem;
         justify-content: space-between;
         border-radius: 12px;
-        height:4rem;
-        transition: background-color 0.2s ease-in-out;
+        width:2.2rem;
+        height: 3.8rem;
+        transition: background-color 0.2s ease-in-out, width 0.2s ease-in-out;
+        align-items: center;
     }
     .active {
         background-color: var(--selected-color) !important;
@@ -109,15 +144,19 @@
         filter: brightness(0) saturate(100%) invert(100%) sepia(13%) saturate(6304%) hue-rotate(178deg) brightness(82%) contrast(93%);
     }
     .nav-option > img {
-        width:2.4rem;
-        height:auto;
+        height:60%;
     }
     .nav-option p {
+        font-size: 0.9rem;
         opacity: 0;
         transition: opacity 0.2s ease-in-out;
+        line-height: 2rem;
     }
     nav:hover .nav-option p, nav:hover .logo p {
         opacity: 1;
+    }
+    nav:hover .nav-option {
+        width:8.5rem;
     }
     .nav-option:hover {
         background-color: var(--bg-color);
